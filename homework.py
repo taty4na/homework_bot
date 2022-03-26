@@ -73,15 +73,19 @@ def get_api_answer(current_timestamp):
 
 def check_response(response):
     """Проверяет ответ API на корректность."""
-    homeworks = response['homeworks']
-    if not isinstance(response, dict):
-        logger.error('Тип ответа не соответствует ожиданиям')
-        raise TypeError('Тип ответа не соответствует ожиданиям')
-    if not isinstance(homeworks, list):
+    try:
+        homeworks = response['homeworks']
+        if not isinstance(response, dict):
+            logger.error('Тип ответа не соответствует ожиданиям')
+            raise TypeError('Тип ответа не соответствует ожиданиям')
+        if not isinstance(homeworks, list):
+            logger.error('Нет ключа homeworks')
+            raise KeyError('Нет ключа homeworks')
+        else:
+            return homeworks
+    except KeyError:
         logger.error('Нет ключа homeworks')
         raise KeyError('Нет ключа homeworks')
-    else:
-        return homeworks
 
 
 def parse_status(homework):
@@ -119,8 +123,8 @@ def main():
     while True:
         try:
             response = get_api_answer(current_timestamp)
-            homework = check_response(response)
-            message = parse_status(homework[0])
+            homeworks = check_response(response)
+            message = parse_status(homeworks[0])
             send_message(bot, message)
             current_timestamp = response.get('current_date')
             time.sleep(RETRY_TIME)
