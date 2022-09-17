@@ -11,9 +11,6 @@ python telegram bot
 ```
 git clone git@github.com:taty4na/homework_bot.git
 ```
-```
-cd homework_bot
-```
 
 Cоздать и активировать виртуальное окружение:
 ```
